@@ -1,0 +1,32 @@
+{% extends 'main/base.html' %}
+
+{% block content %}
+    <div id="login" class="uk-margin-auto uk-margin-large-top uk-text-center uk-width-1-3">
+        <h2>Login</h2>
+        <form method="post">
+        {% csrf_token %}
+        <div class="control-group uk-margin">
+            <label class="control-label" for="username">Username</label>
+            <div class="controls">
+                <input type="text" id="username" name="username"  placeholder="Username" class="uk-input">
+            </div>
+        </div>
+        <div class="control-group uk-margin">
+            <label class="control-label" for="password">Password</label>
+            <div class="controls">
+                <input type="password" name="password" id="password" placeholder="Password" class="uk-input">
+            </div>
+        </div>
+        <div class="control-group uk-margin">
+            <div class="controls">
+                <button type="submit" class="btn btn uk-button uk-button-primary">Login</button>
+            </div>
+        </div>
+        <div class="control-group uk-margin">
+            <div class="controls">
+                <span>Already have an account </span><a href="{% url 'main:register_view' %}">create one</a>
+            </div>
+        </div>
+        </form>
+    </div>
+{% endblock %}
