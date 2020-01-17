@@ -44,10 +44,13 @@ class Competition(models.Model):
 
 
 class Submission(models.Model):
+    competitor = models.ForeignKey(User, on_delete=models.CASCADE)
     competition = models.ForeignKey(Competition, on_delete=models.CASCADE)
-    docker_container_path = models.CharField(max_length=300)
+    container_path = models.CharField(max_length=300,null=True, blank=True)
+    container_id = models.CharField(max_length=500,null=True, blank=True)
+    port = models.IntegerField(null=True, blank=True)
     submission_csv = models.FileField(
         upload_to="dataset/", validators=[validate_file_extension]
     )
-    accuracy = models.IntegerField()
+    accuracy = models.IntegerField(null=True, blank=True)
 

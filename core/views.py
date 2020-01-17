@@ -3,7 +3,7 @@ from .models import Competition, Submission
 from .forms import HostCompetitionForm
 from django.core.paginator import Paginator
 from django.contrib.auth.decorators import login_required
-
+from .service import start_jupyter_server
 
 def index(request):
     competition = Competition.objects.all()
@@ -17,6 +17,12 @@ def index(request):
 
 def competition(request, competition_id):
     return HttpResponse("Check")
+
+def start_competition(request, competition_id):
+    competition = get_object_or_404(Competition, id=competition_id)
+    
+    jupyter_url = start_jupyter_server(request.user, competition)
+    return HttpResponse(jupyter_url)
 
 @login_required(login_url='login/')
 def host_competition(request):
