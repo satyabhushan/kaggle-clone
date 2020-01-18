@@ -36,7 +36,7 @@ class Competition(models.Model):
         upload_to="dataset/", validators=[validate_file_extension]
     )
     start_time = models.DateTimeField(default=timezone.now())
-    end_time = models.DateTimeField(default=timezone.datetime(2012,1,1))
+    end_time = models.DateTimeField(default=timezone.datetime(2012, 1, 1))
     date_created = models.DateTimeField(auto_now=True)
 
     def __str__(self):
@@ -46,11 +46,14 @@ class Competition(models.Model):
 class Submission(models.Model):
     competitor = models.ForeignKey(User, on_delete=models.CASCADE)
     competition = models.ForeignKey(Competition, on_delete=models.CASCADE)
-    container_path = models.CharField(max_length=300,null=True, blank=True)
-    container_id = models.CharField(max_length=500,null=True, blank=True)
+    container_path = models.CharField(max_length=300, null=True, blank=True)
+    container_id = models.CharField(max_length=500, null=True, blank=True)
     port = models.IntegerField(null=True, blank=True)
     submission_csv = models.FileField(
         upload_to="dataset/", validators=[validate_file_extension]
     )
     accuracy = models.IntegerField(null=True, blank=True)
+
+    class Meta:
+        unique_together = ("competitor", "competition")
 

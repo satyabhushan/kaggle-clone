@@ -1,5 +1,81 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    {{user.username}}
+    <div class="container mt-4">
+        <!-- <div class="alert alert-warning alert-dismissible fade show" role="alert">
+            <strong>Holy guacamole!</strong> You should check in on some of those fields below.
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div> -->
+        <div>
+            <div>
+                <h4 class="font-weight-bold mb-3 mt-3">Entered Competitions</h4>
+                <!-- <hr> -->
+            </div>
+            <div class="row">
+                {% for competition in entered_competitions %}
+                    <div class="card col-4 border-0 mb-3 bg-transparent">
+                        <div class="card-body shadow bg-white" style="border-radius:5px">
+                            <div class="mb-2">
+                                {% for tag in competition.competition.tags %}
+                                    <span class="badge badge-primary">{{ tag.name }}</span>
+                                {% endfor %}
+                            </div>
+                            <h5 class="font-weight-bold card-title">{{ competition.competition.title }}</h5>
+                            <p class="card-text">{{ competition.competition.brief }}</p>
+                            <a href="{% url 'core:competition' competition_id=competition.competition.id %}" class="btn btn-primary">Start</a>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div>
+            <div>
+                <h4 class="font-weight-bold mb-3 mt-3">Active Competitions</h4>
+                <!-- <hr> -->
+            </div>
+            <div class="row">
+                {% for competition in active_competitions %}
+                    <div class="card col-4 border-0 mb-3 bg-transparent">
+                        <div class="card-body shadow bg-white" style="border-radius:5px">
+                            <div class="mb-2">
+                                {% for tag in competition.tags %}
+                                    <span class="badge badge-primary">{{ tag.name }}</span>
+                                {% endfor %}
+                            </div>
+                            <h5 class="font-weight-bold card-title">{{ competition.title }}</h5>
+                            <p class="card-text">{{ competition.brief }}</p>
+                            <a href="{% url 'core:competition' competition_id=competition.id %}" class="btn btn-primary">View Competition</a>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- <div>
+            <div>
+                <h3 class="font-weigth-bold mb-3 mt-3">Entered Competitions</h3>
+                <hr>
+            </div>
+            <div class="row">
+                <div class="card col-6 border-0 mb-3">
+                    <div class="card-body shadow">
+                        <div class="mb-2">
+                            <span class="badge badge-secondary">New</span>
+                            <span class="badge badge-primary">Primary</span>
+                            <span class="badge badge-secondary">Secondary</span>
+                            <span class="badge badge-success">Success</span>
+                            <span class="badge badge-danger">Danger</span>
+                            <span class="badge badge-warning">Warning</span>
+                        </div>
+                        <h5 class="font-weight-bold card-title">Special title treatment</h5>
+                        <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
+                        <a href="#" class="btn btn-primary">Go somewhere</a>
+                    </div>
+                </div>
+            </div>
+        </div> -->
+    </div>
 {% endblock %}

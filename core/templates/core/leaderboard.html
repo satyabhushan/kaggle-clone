@@ -1,0 +1,81 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div>
+    <div class="" style="height: 250px; background: #17a2b8">
+        <div class="position-relative container d-flex flex-column h-100 justify-content-around text-light">
+            <div>
+                <h2 class="fa-3x">{{ competition.title }}</h2>
+                <p class="fa">{{ competition.brief }}</p>
+            </div>
+            <div class="d-flex align-items-center">
+                <i class="d-block shadow" style=" height: 40px; width: 40px; overflow: hidden; border-radius: 50%;">
+                    <img src="{% static 'images/default-user.png' %}" style="height: inherit;">
+                </i>
+                <h5 class="m-0 ml-2">{{ competition.host }}</h5>
+            </div>
+        </div>
+    </div>
+    <div class="container d-flex mt-4">
+        <div class="col-9 p-0">
+            <div data-spy="scroll" data-target="#scroll-example" class="pr-4">
+                <div id="leaderboard">
+                    <h4>Leader Board</h4>
+                    <hr>
+                    
+                    <table class="table table-bordered table-hover">
+                        
+                        <thead classs="thead-light">
+                          <tr>
+                            <th scope="col">Rank</th>
+                            <th scope="col" colspan="2">Name</th>
+                            <th scope="col">Accuracy %</th>
+                          </tr>
+                        </thead>
+                        
+                        <tbody>
+                          <tr>
+                            <th scope="row">1</th>
+                            <td colspan="2">Mark</td>
+                            <td>Otto</td>
+                          </tr>
+                          <tr>
+                            <th scope="row">2</th>
+                            <td colspan="2">Jacob</td>
+                            <td>Thornton</td>
+                          </tr>
+                          <tr>
+                            <th scope="row">3</th>
+                            <td colspan="2">Larry</td>
+                            <td>the Bird</td>
+                          </tr>
+                        </tbody>
+                      </table>
+                </div>
+            </div data-spy="scroll" data-target="#scroll-example">
+        </div>
+        <div class="col-3 p-0">
+            <div id="scroll-example" class="border-left pl-4">
+                <a href="{% url 'core:competition' competition_id=competition.id %}#description" class="btn btn-block btn-primary">Description</a>
+                <a href="{% url 'core:competition' competition_id=competition.id %}#dataset" class="btn btn-block btn-primary">dataset</a>
+                <a href="#leaderboard" class="btn btn-block btn-primary">Leader Board</a>
+                <hr>
+                {% if competition.tags %}
+                    <div>
+                        <h6>Related to</h6>
+                        {% for tag in competition.tags %}
+                            <span class="badge badge-secondary">New</span>
+                            <span class="badge badge-primary">Primary</span>
+                            <span class="badge badge-secondary">Secondary</span>
+                            <span class="badge badge-success">Success</span>
+                            <span class="badge badge-danger">Danger</span>
+                            <span class="badge badge-warning">Warning</span>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

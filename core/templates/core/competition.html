@@ -1,0 +1,112 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div>
+    <div class="" style="height: 250px; background: #17a2b8">
+        <div class="position-relative container d-flex flex-column h-100 justify-content-around text-light">
+            <div>
+                <h2 class="fa-3x">{{ competition.title }}</h2>
+                <p class="fa">{{ competition.brief }}</p>
+            </div>
+            <div class="d-flex align-items-center">
+                <i class="d-block shadow" style=" height: 40px; width: 40px; overflow: hidden; border-radius: 50%;">
+                    <img src="{% static 'images/default-user.png' %}" style="height: inherit;">
+                </i>
+                <h5 class="m-0 ml-2">{{ competition.host }}</h5>
+            </div>
+        </div>
+    </div>
+
+    <div class="container d-flex mt-4 mb-4">
+        <div class="col-9 p-0">
+            <div data-spy="scroll" data-target="#scroll-example" class="pr-4">
+                <div id="description">
+                    <h4>Description</h4>
+                    <hr>
+                    {{ competition.description }}
+                </div>
+                <div id="dataset" class="mt-4">
+                    <h4>Dataset</h4>
+                    <hr>
+                    <ul class="list-group">
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            <a href="{{ competition.test_csv.url }}">
+                                <span>
+                                    <i class="fas fa-file-csv mr-2"></i>{{ competition.test_csv.name }}
+                                </span>
+                            </a>
+                            <a href="{{ competition.test_csv.url }}" class="">
+                                <i class="fas fa-cloud-download-alt"></i>
+                            </a>
+                        </li>
+
+                        <!-- <li class="list-group-item d-flex justify-content-between align-items-center">
+                            <a href="{{ competition.test_solution_csv.url }}">
+                                <span>
+                                    <i class="fas fa-file-csv mr-2"></i>{{ competition.test_solution_csv.name }}
+                                </span>
+                            </a>
+                            <a href="{{ competition.test_solution_csv.url }}" class="">
+                                <i class="fas fa-cloud-download-alt"></i>
+                            </a>
+                        </li> -->
+
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            <a href="{{ competition.train_csv.url }}">
+                                <span>
+                                    <i class="fas fa-file-csv mr-2"></i>{{ competition.test_csv.name }}
+                                </span>
+                            </a>
+                            <a href="{{ competition.train_csv.url }}" class="">
+                                <i class="fas fa-cloud-download-alt"></i>
+                            </a>
+                        </li>
+
+                        <!-- <li class="list-group-item d-flex justify-content-between align-items-center">
+                            <a href="{{ competition.train_solution_csv.url }}">
+                                <span>
+                                    <i class="fas fa-file-csv mr-2"></i>{{ competition.train_solution_csv.name }}
+                                </span>
+                            </a>
+                            <a href="{{ competition.train_solution_csv.url }}" class="">
+                                <i class="fas fa-cloud-download-alt"></i>
+                            </a>
+                        </li> -->
+                      </ul>
+                </div>
+            </div data-spy="scroll" data-target="#scroll-example">
+        </div>
+        <div class="col-3 p-0">
+            <div id="scroll-example" class="border-left pl-4">
+                {% if user_enroll %}
+                    {% if user_submit %}
+                        <a href="{% url 'core:submit_solution' competition_id=competition.id %}" class="btn btn-block btn-success">Submit New Prediction</a>
+                    {% else %}
+                        <a href="{% url 'core:submit_solution' competition_id=competition.id %}" class="btn btn-block btn-success">Submit Prediction</a>
+                    {% endif %}
+                {% else %}
+                    <a href="{% url 'core:join_competition' competition_id=competition.id %}" class="btn btn-block btn-success">Join Competition</a>
+                {% endif %}
+                <a href="#description" class="btn btn-block btn-outline-primary">Description</a>
+                <a href="#dataset" class="btn btn-block btn-outline-primary">Dataset</a>
+                <a href="{% url 'core:leaderboard' competition_id=competition.id %}#leaderboard" class="btn btn-block btn-primary">Leader Board</a>
+                <hr>
+                {% if competition.tags %}
+                    <div>
+                        <h6>Related to</h6>
+                        {% for tag in competition.tags %}
+                            <span class="badge badge-secondary">New</span>
+                            <span class="badge badge-primary">Primary</span>
+                            <span class="badge badge-secondary">Secondary</span>
+                            <span class="badge badge-success">Success</span>
+                            <span class="badge badge-danger">Danger</span>
+                            <span class="badge badge-warning">Warning</span>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            </div id="scroll-example">
+        </div>
+    </div>
+</div>
+{% endblock %}

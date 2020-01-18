@@ -5,7 +5,6 @@ from .forms import UserRegisterForm, UserLoginForm
 from django.contrib.auth.decorators import login_required
 
 
-
 def register_view(request):
     print(request.user.id)
     if request.method == "POST":
@@ -29,11 +28,12 @@ def login_view(request):
         if user is not None:
             if user.is_active:
                 login(request, user)
+                print(dir(request))
                 return redirect("/")
     return render(request, "main/login.html")
 
 
-@login_required(login_url="/login")
+# @login_required(login_url="/login")
 def logout_view(request):
     logout(request)
     return redirect("/register")
