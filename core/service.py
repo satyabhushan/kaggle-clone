@@ -6,7 +6,7 @@ from pathlib import Path
 from .models import Competition, Submission
 from random import randint
 from secrets import token_urlsafe
-from .extract_csv_file_data import parse_data
+from .extract_csv_file_data import parse_data, get_dict_from_str_list
 
 
 def load_competitions(request, user):
@@ -125,37 +125,74 @@ def start_jupyter_server(user, competition):
 
 def get_user_solution_data(competition_id, user_id):
     try:
-        user_solution_file_path = "/home/s8/Videos/compertition/user-{}/competition-{}/solution.csv".format(
+        user_solution_file_path = "/home/s8/Videos/competition/user-{}/competition-{}/solution.csv".format(
             user_id, competition_id
         )
-        with open(user_solution_file_path) as csv_file:
+        with open(user_solution_file_path) as _:
 
-            solution_output = parse_data(csv_file.read())
+            solution_output = parse_data(user_solution_file_path)
             return solution_output
     except IOError:
+        print(1)
         try:
-            user_kernel_ipynb_file_path = "/home/s8/Videos/compertition/user-{}/competition-{}/Kernel-{}.ipynb.csv".format(
+            user_kernel_ipynb_file_path = "/home/s8/Videos/competition/user-{}/competition-{}/Kernel-{}.ipynb".format(
                 user_id, competition_id, user_id
             )
+            print(user_kernel_ipynb_file_path)
             with open(user_kernel_ipynb_file_path) as ipynb_file:
                 data = json.loads(ipynb_file.read())
-                solution_output = data["cells"][-1]["outputs"]
-                if solution_output.get("text"):
-                    try:
-                        output = json.loads(solution_output["text"])
-                        return output
-                    except:
-                        return {}
+                try:
+                    outputs = data["cells"][-1]["outputs"][0]["text"]
+                    solution_output = get_dict_from_str_list(outputs, delemiter=",")
+                    return solution_output
+                except Exception:
+                    if not data.get("cells"):
+                        raise Exception(
+                            "There is some error in <code>Kernel-{}.ipynb</code> file. Please print output in proper format.".format(
+                                user_id
+                            ),
+                            None,
+                        )
+                    if len(data["cells"]) == 0:
+                        raise Exception(
+                            "There is no code cell output in <code>Kernel-{}.ipynb</code>. Please check again then submit.".format(
+                                user_id
+                            ),
+                            None,
+                        )
+                    if len(data["cells"][-1].get("outputs")) == 0:
+                        raise Exception(
+                            "There is no code cell output in <code>Kernel-{}.ipynb</code>. Please check again then submit.".format(
+                                user_id
+                            ),
+                            None,
+                        )
+                    else:
+                        raise Exception(
+                            "Please print output in proper format.", outputs
+                        )
         except IOError:
-            return {}
+            raise Exception(
+                "Neither <code>solution.csv</code> or <code>Kernel-{}.ipynb</code> file found.".format(
+                    user_id
+                ),
+                None,
+            )
+    except Exception:
+        with open(user_solution_file_path) as _:
+            solution_output = _.read()
+            raise Exception(
+                "There is some error in <code>solution.csv</code> file. Please upload in proper format.",
+                solution_output,
+            )
 
 
 def get_solution_data(competition):
-    solution_file_path = competition.test_solution_csv
-    with open(
-        "/home/s8/Videos/kaggle_clone/kaggle_clone/media/{}".format(solution_file_path)
-    ) as solution_file:
-        solution_output = solution_file.read()
+    solution_file_path = "/home/s8/Videos/kaggle_clone/kaggle_clone/media/{}".format(
+        competition.test_solution_csv
+    )
+    with open(solution_file_path) as _:
+        solution_output = parse_data(solution_file_path)
 
     return solution_output
 
@@ -174,14 +211,37 @@ def get_accuracy_percentage(solution_output, user_solution_output):
         ):
             correct_ids_len += 1
 
-    accuracy_percentage = correct_ids_len*100/keys_len
+    accuracy_percentage = correct_ids_len * 100 / keys_len
     return accuracy_percentage
 
 
-def submit_solution(competition, user):
-    user_solution_output = get_user_solution_data(competition.id, user.id)
+def submit_solution(request, competition, user):
+
+    try:
+        user_solution_output = get_user_solution_data(competition.id, user.id)
+    except Exception as e:
+        print("error", e)
+        error = e
+        return render(
+            request,
+            "core/submit_prediction.html",
+            {"user": user, "competition": competition, "error": error},
+        )
+
     solution_data = get_solution_data(competition)
+    print(user_solution_output, solution_data)
     accuracy = get_accuracy_percentage(solution_data, user_solution_output)
-    Submission.filter(competition=competition, competitor=user).update(accuracy=accuracy)
-    return accuracy
+    Submission.objects.filter(competition=competition, competitor=user).update(
+        accuracy=accuracy
+    )
+    print(accuracy)
+    return render(
+        request,
+        "core/submit_prediction.html",
+        {
+            "user": user,
+            "competition": competition,
+            "user_solution_output": user_solution_output,
+        },
+    )
 

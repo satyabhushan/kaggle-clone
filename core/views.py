@@ -91,13 +91,7 @@ def join_competition(request, competition_id):
 def submit_prediction(request, competition_id):
     competition = get_object_or_404(Competition, id=competition_id)
     user = request.user
-    submit_solution(competition, user)
-
-    return render(
-        request,
-        "core/submit_prediction.html",
-        {"competition": competition, "user": user},
-    )
+    return submit_solution(request, competition, user)
 
 
 def start_competition(request, competition_id):

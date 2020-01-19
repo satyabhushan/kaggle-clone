@@ -20,43 +20,17 @@
     <div class="container d-flex mt-4">
         <div class="col-9 p-0">
             <div data-spy="scroll" data-target="#scroll-example" class="pr-4">
-                <div id="leaderboard">
-                    <h4>Leader Board</h4>
-                    <hr>
-
-                    <ul class="list-group">
-                        <li class="bg-light list-group-item d-flex justify-content-between align-items-center">
-                            <span class="w-75">
-                                <span class="col-3 d-inline-block p-0">Rank #</span>
-                                <span>Username</span>
-                            </span>
-                            <span>Accuracy %</span>
-                        </li>
-
-                        <li class="list-group-item d-flex justify-content-between align-items-center">
-                            <span class="w-75">
-                                <span class="col-3 d-inline-block p-0">1</span>
-                                <span>Username</span>
-                            </span>
-                            <span>90%</span>
-                        </li>
-
-                        <li class="list-group-item d-flex justify-content-between align-items-center">
-                            <span class="w-75">
-                                <span class="col-3 d-inline-block p-0">1</span>
-                                <span>Username</span>
-                            </span>
-                            <span>90%</span>
-                        </li>
-
-                        <li class="list-group-item d-flex justify-content-between align-items-center">
-                            <span class="w-75">
-                                <span class="col-3 d-inline-block p-0">1</span>
-                                <span>Username</span>
-                            </span>
-                            <span>90%</span>
-                        </li>
-                    </ul>
+                <div>
+                    {% if error %}
+                        <div class="alert alert-danger" role="alert">
+                            <h4 class="alert-heading">Error</h4>
+                            <hr>
+                            <p>An error occur while reading your output.</p>
+                            <p>OutputError: {{ error|safe }}</p>
+                        </div>
+                    {% endif %}
+                    {% if user_solution_output %}
+                    {% endif %}
                 </div>
             </div data-spy="scroll" data-target="#scroll-example">
         </div>
