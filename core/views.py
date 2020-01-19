@@ -3,7 +3,12 @@ from .models import Competition, Submission
 from .forms import HostCompetitionForm
 from django.core.paginator import Paginator
 from django.contrib.auth.decorators import login_required
-from .service import start_jupyter_server, load_competitions, tell_about_turing_halt
+from .service import (
+    start_jupyter_server,
+    load_competitions,
+    tell_about_turing_halt,
+    submit_solution,
+)
 
 
 def index(request):
@@ -18,10 +23,16 @@ def index(request):
 def competition(request, competition_id):
     competition = get_object_or_404(Competition, id=competition_id)
     user = request.user
-    user_enroll = user.submission_set.filter(competition=competition).first()
+    user_enroll = None
     user_submit = None
-    if user_enroll:
-        user_submit = user_enroll.accuracy
+    jupyter_notebook_url = None
+
+    if user.is_authenticated:
+        user_enroll = user.submission_set.filter(competition=competition).first()
+        if user_enroll:
+            user_submit = user_enroll.accuracy
+            jupyter_notebook_url = user_enroll.container_path
+            print(jupyter_notebook_url)
     return render(
         request,
         "core/competition.html",
@@ -30,6 +41,7 @@ def competition(request, competition_id):
             "user": user,
             "user_enroll": user_enroll,
             "user_submit": user_submit,
+            "jupyter_notebook_url": jupyter_notebook_url,
         },
     )
 
@@ -42,6 +54,7 @@ def leaderboard(request, competition_id):
     )
 
 
+@login_required(login_url="/login")
 def join_competition(request, competition_id):
     competition = get_object_or_404(Competition, id=competition_id)
     user = request.user
@@ -50,11 +63,16 @@ def join_competition(request, competition_id):
     )
 
 
-def submit_solution(request, competition_id):
+@login_required(login_url="/login")
+def submit_prediction(request, competition_id):
     competition = get_object_or_404(Competition, id=competition_id)
     user = request.user
+    submit_solution(competition, user)
+
     return render(
-        request, "core/leaderboard.html", {"competition": competition, "user": user}
+        request,
+        "core/submit_prediction.html",
+        {"competition": competition, "user": user},
     )
 
 
@@ -70,7 +88,7 @@ def start_competition(request, competition_id):
     )
 
 
-@login_required(login_url="login/")
+@login_required
 def host_competition(request):
     user = request.user
     if request.method == "POST":

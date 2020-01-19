@@ -18,8 +18,8 @@ urlpatterns = [
     ),
     path(
         "competition/<int:competition_id>/submit-prediction",
-        views.submit_solution,
-        name="submit_solution",
+        views.submit_prediction,
+        name="submit_prediction",
     ),
     path("host-competition", views.host_competition, name="host_competition",),
     path(

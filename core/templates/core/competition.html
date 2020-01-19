@@ -3,7 +3,7 @@
 
 {% block content %}
 <div>
-    <div class="" style="height: 250px; background: #17a2b8">
+    <div class="" style="height: 190px; background: #17a2b8">
         <div class="position-relative container d-flex flex-column h-100 justify-content-around text-light">
             <div>
                 <h2 class="fa-3x">{{ competition.title }}</h2>
@@ -50,7 +50,7 @@
                             <a href="{{ competition.test_solution_csv.url }}" class="">
                                 <i class="fas fa-cloud-download-alt"></i>
                             </a>
-                        </li> -->
+                        </li> --> 
 
                         <li class="list-group-item d-flex justify-content-between align-items-center">
                             <a href="{{ competition.train_csv.url }}">
@@ -81,10 +81,11 @@
             <div id="scroll-example" class="border-left pl-4">
                 {% if user_enroll %}
                     {% if user_submit %}
-                        <a href="{% url 'core:submit_solution' competition_id=competition.id %}" class="btn btn-block btn-success">Submit New Prediction</a>
+                        <a href="{% url 'core:submit_prediction' competition_id=competition.id %}" class="btn btn-block btn-success">Submit New Prediction</a>
                     {% else %}
-                        <a href="{% url 'core:submit_solution' competition_id=competition.id %}" class="btn btn-block btn-success">Submit Prediction</a>
+                        <a href="{% url 'core:submit_prediction' competition_id=competition.id %}" class="btn btn-block btn-success">Submit Prediction</a>
                     {% endif %}
+                    <a href="http://{{ jupyter_notebook_url }}" class="btn btn-block btn-primary">Launch Jupyter</a>
                 {% else %}
                     <a href="{% url 'core:join_competition' competition_id=competition.id %}" class="btn btn-block btn-success">Join Competition</a>
                 {% endif %}
@@ -105,7 +106,7 @@
                         {% endfor %}
                     </div>
                 {% endif %}
-            </div id="scroll-example">
+            </div>
         </div>
     </div>
 </div>
