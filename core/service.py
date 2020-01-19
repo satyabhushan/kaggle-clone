@@ -182,6 +182,6 @@ def submit_solution(competition, user):
     user_solution_output = get_user_solution_data(competition.id, user.id)
     solution_data = get_solution_data(competition)
     accuracy = get_accuracy_percentage(solution_data, user_solution_output)
-    Submission.get(competition=competition, competitor=user).update(accuracy=accuracy)
+    Submission.filter(competition=competition, competitor=user).update(accuracy=accuracy)
     return accuracy
 

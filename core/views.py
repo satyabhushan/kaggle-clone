@@ -49,8 +49,32 @@ def competition(request, competition_id):
 def leaderboard(request, competition_id):
     competition = get_object_or_404(Competition, id=competition_id)
     user = request.user
+    competition_enrolls = competition.submission_set.filter(
+        accuracy__isnull=False
+    ).order_by("-accuracy")
+
+    user_enroll = None
+    user_submit = None
+    user_rank = None
+
+    if user.is_authenticated:
+        user_enroll = competition.submission_set.filter(competitor=user).first()
+        if user_enroll:
+            user_submit = user_enroll.accuracy
+            if user_submit:
+                user_rank = list(competition_enrolls).index(user_enroll) + 1
+
     return render(
-        request, "core/leaderboard.html", {"competition": competition, "user": user}
+        request,
+        "core/leaderboard.html",
+        {
+            "competition": competition,
+            "competition_enrolls": list(competition_enrolls),
+            "user": user,
+            "user_enroll": user_enroll,
+            "user_submit": user_submit,
+            "user_rank": user_rank,
+        },
     )
 
 
