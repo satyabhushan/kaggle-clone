@@ -61,7 +61,7 @@ def leaderboard(request, competition_id):
         user_enroll = competition.submission_set.filter(competitor=user).first()
         if user_enroll:
             user_submit = user_enroll.accuracy
-            if user_submit:
+            if user_submit is not None:
                 user_rank = list(competition_enrolls).index(user_enroll) + 1
 
     return render(

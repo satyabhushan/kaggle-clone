@@ -23,7 +23,7 @@
             <div data-spy="scroll" data-target="#scroll-example" class="pr-4">
                 {% if user.is_authenticated and user_enroll %}
                 <div>
-                    {% if user_submit %}
+                    {% if not user_submit == None %}
                         <div class="jumbotron jumbotron-fluid p-4 shadow-sm bg-light">
                             <h1 class="d-flex flex-wrap justify-content-between">
                                 <span>You</span>

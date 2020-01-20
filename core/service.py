@@ -144,32 +144,38 @@ def get_user_solution_data(competition_id, user_id):
                 try:
                     outputs = data["cells"][-1]["outputs"][0]["text"]
                     solution_output = get_dict_from_str_list(outputs, delemiter=",")
+                    print(solution_output)
+                    if len(solution_output.keys()) == 0:
+                        raise Exception
+
                     return solution_output
                 except Exception:
                     if not data.get("cells"):
-                        raise Exception(
-                            "There is some error in <code>Kernel-{}.ipynb</code> file. Please print output in proper format.".format(
-                                user_id
-                            ),
-                            None,
-                        )
+                        raise Exception(42, "some other details")
+                        # raise "Something failed", (
+                        #     "There is some error in <code>Kernel-{}.ipynb</code> file. Please print output in proper format.".format(
+                        #         user_id
+                        #     ),
+                        #     "No output",
+                        # )
                     if len(data["cells"]) == 0:
                         raise Exception(
                             "There is no code cell output in <code>Kernel-{}.ipynb</code>. Please check again then submit.".format(
                                 user_id
                             ),
-                            None,
+                            "No output",
                         )
                     if len(data["cells"][-1].get("outputs")) == 0:
                         raise Exception(
                             "There is no code cell output in <code>Kernel-{}.ipynb</code>. Please check again then submit.".format(
                                 user_id
                             ),
-                            None,
+                            "No output",
                         )
                     else:
                         raise Exception(
-                            "Please print output in proper format.", outputs
+                            "Please print output in proper format.",
+                            outputs,
                         )
         except IOError:
             raise Exception(
