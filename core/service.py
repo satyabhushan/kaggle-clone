@@ -32,7 +32,11 @@ def load_competitions(request, user):
 
 
 def tell_about_turing_halt(request):
-    pass
+    
+    return render(
+        request,
+        "core/index1.html",{}
+    )
 
 
 def start_jupyter_server(user, competition):

@@ -21,6 +21,11 @@ urlpatterns = [
         views.submit_prediction,
         name="submit_prediction",
     ),
+    path(
+        "competition/<int:competition_id>/join-status",
+        views.join_status,
+        name="join_status",
+    ),
     path("host-competition", views.host_competition, name="host_competition",),
     path(
         "start-competition/<int:competition_id>",

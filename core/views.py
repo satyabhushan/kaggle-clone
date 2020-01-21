@@ -1,7 +1,13 @@
-from django.shortcuts import render, HttpResponse, redirect, get_object_or_404, Http404
+from django.shortcuts import (
+    render,
+    HttpResponse,
+    redirect,
+    get_object_or_404,
+)
+from django.http import JsonResponse
 from .models import Competition, Submission
 from .forms import HostCompetitionForm
-from django.core.paginator import Paginator
+# from django.core.paginator import Paginator
 from django.contrib.auth.decorators import login_required
 from .service import (
     start_jupyter_server,
@@ -14,12 +20,12 @@ from .handle_jupyter_server import enroll_user
 
 def index(request):
     user = request.user
-    rendered = load_competitions(request, user)
-
-    # if user.is_authenticated:
     # rendered = load_competitions(request, user)
-    # else:
-    # rendered = tell_about_turing_halt(request)
+
+    if user.is_authenticated:
+        rendered = load_competitions(request, user)
+    else:
+        rendered = tell_about_turing_halt(request)
     return rendered
 
 
@@ -101,6 +107,14 @@ def join_competition(request, competition_id):
             "jupyter_path": status["jupyter_path"],
         },
     )
+
+
+@login_required(login_url="/login")
+def join_status(request, competition_id):
+    competition = get_object_or_404(Competition, id=competition_id)
+    user = request.user
+    status = enroll_user(user, competition)
+    return JsonResponse(status)
 
 
 @login_required(login_url="/login")

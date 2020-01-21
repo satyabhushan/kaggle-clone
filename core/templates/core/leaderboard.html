@@ -3,21 +3,18 @@
 
 {% block content %}
 <div>
-    <div class="" style="height: 190px; background: #17a2b8">
+    <div class="" style="height: 190px; background:  url({% static 'images/bg1' %}); background-position-x: left;background-position-y: bottom;background-attachment: fixed;">
         <div class="position-relative container d-flex flex-column h-100 justify-content-around text-light">
             <div>
-                <h2 class="fa-3x">{{ competition.title }}</h2>
-                <p class="fa">{{ competition.brief }}</p>
+                <h2>{{ competition.title }}</h2>
+                <p>{{ competition.brief }}</p>
             </div>
             <div class="d-flex align-items-center">
-                <i class="d-block shadow" style=" height: 40px; width: 40px; overflow: hidden; border-radius: 50%;">
-                    <img src="{% static 'images/default-user.png' %}" style="height: inherit;">
-                </i>
-                <h5 class="m-0 ml-2">{{ competition.host }}</h5>
+                <h5 class="m-0 ml-2"><small>Hosted by</small> {{ competition.host }}</h5>
             </div>
         </div>
     </div>
-    
+
     <div class="container d-flex mt-4">
         <div class="col-9 p-0">
             <div data-spy="scroll" data-target="#scroll-example" class="pr-4">
@@ -82,37 +79,32 @@
         </div>
         <div class="col-3 p-0">
             <div id="scroll-example" class="border-left pl-4">
+                <a href="{% url 'core:leaderboard' competition_id=competition.id %}#leaderboard" class="btn btn-block btn-primary">Leader Board</a>
                 {% if user_enroll %}
-                {% if user_submit %}
-                <a href="{% url 'core:submit_prediction' competition_id=competition.id %}"
-                    class="btn btn-block btn-success">Submit New Prediction</a>
+                    {% if user_submit %}
+                        <a href="{% url 'core:submit_prediction' competition_id=competition.id %}" class="btn btn-block btn-success">Submit New Prediction</a>
+                    {% else %}
+                        <a href="{% url 'core:submit_prediction' competition_id=competition.id %}" class="btn btn-block btn-success">Submit Prediction</a>
+                    {% endif %}
+                    <a href="http://{{ jupyter_notebook_url }}" class="btn btn-block btn-primary">Launch Jupyter</a>
                 {% else %}
-                <a href="{% url 'core:submit_prediction' competition_id=competition.id %}"
-                    class="btn btn-block btn-success">Submit Prediction</a>
+                    <a href="{% url 'core:join_competition' competition_id=competition.id %}" class="btn btn-block btn-success">Join Competition</a>
                 {% endif %}
-                <a href="http://{{ jupyter_notebook_url }}" class="btn btn-block btn-primary">Launch Jupyter</a>
-                {% else %}
-                <a href="{% url 'core:join_competition' competition_id=competition.id %}"
-                    class="btn btn-block btn-success">Join Competition</a>
-                {% endif %}
-                <a href="{% url 'core:competition' competition_id=competition.id %}#description"
-                    class="btn btn-block btn-outline-primary">Description</a>
-                <a href="{% url 'core:competition' competition_id=competition.id %}#dataset"
-                    class="btn btn-block btn-outline-primary">Dataset</a>
-                <a href="#leaderboard" class="btn btn-block btn-primary">Leader Board</a>
+                <a href="{% url 'core:competition' competition_id=competition.id %}#description" class="btn btn-block btn-outline-primary">Description</a>
+                <a href="{% url 'core:competition' competition_id=competition.id %}#dataset" class="btn btn-block btn-outline-primary">Dataset</a>
                 <hr>
                 {% if competition.tags %}
-                <div>
-                    <h6>Related to</h6>
-                    {% for tag in competition.tags %}
-                    <span class="badge badge-secondary">New</span>
-                    <span class="badge badge-primary">Primary</span>
-                    <span class="badge badge-secondary">Secondary</span>
-                    <span class="badge badge-success">Success</span>
-                    <span class="badge badge-danger">Danger</span>
-                    <span class="badge badge-warning">Warning</span>
-                    {% endfor %}
-                </div>
+                    <div>
+                        <h6>Related to</h6>
+                        {% for tag in competition.tags %}
+                            <span class="badge badge-secondary">New</span>
+                            <span class="badge badge-primary">Primary</span>
+                            <span class="badge badge-secondary">Secondary</span>
+                            <span class="badge badge-success">Success</span>
+                            <span class="badge badge-danger">Danger</span>
+                            <span class="badge badge-warning">Warning</span>
+                        {% endfor %}
+                    </div>
                 {% endif %}
             </div>
         </div>

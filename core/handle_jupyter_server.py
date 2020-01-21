@@ -107,7 +107,7 @@ def start_jupyter_server(user_id, competition):
     )
 
     container = client.create_container(
-        image="comp:latest",
+        image="comp:1.0",
         volumes=volumes,
         ports=[8888],
         host_config=host_config,

@@ -6,14 +6,11 @@
     <div class="" style="height: 190px; background:  url({% static 'images/bg1' %}); background-position-x: left;background-position-y: bottom;background-attachment: fixed;">
         <div class="position-relative container d-flex flex-column h-100 justify-content-around text-light">
             <div>
-                <h2 class="fa-3x">{{ competition.title }}</h2>
-                <p class="fa">{{ competition.brief }}</p>
+                <h2>{{ competition.title }}</h2>
+                <p>{{ competition.brief }}</p>
             </div>
             <div class="d-flex align-items-center">
-                <i class="d-block shadow" style=" height: 40px; width: 40px; overflow: hidden; border-radius: 50%;">
-                    <img src="{% static 'images/default-user.png' %}" style="height: inherit;">
-                </i>
-                <h5 class="m-0 ml-2">{{ competition.host }}</h5>
+                <h5 class="m-0 ml-2"><small>Hosted by</small> {{ competition.host }}</h5>
             </div>
         </div>
     </div>
@@ -24,7 +21,7 @@
                 <div id="description">
                     <h4>Description</h4>
                     <hr>
-                    {{ competition.description }}
+                    <div class="markdown"><pre>{{ competition.description }}</pre></div>
                 </div>
                 <div id="dataset" class="mt-4">
                     <h4>Dataset</h4>
@@ -41,17 +38,6 @@
                             </a>
                         </li>
 
-                        <!-- <li class="list-group-item d-flex justify-content-between align-items-center">
-                            <a href="{{ competition.test_solution_csv.url }}">
-                                <span>
-                                    <i class="fas fa-file-csv mr-2"></i>{{ competition.test_solution_csv.name }}
-                                </span>
-                            </a>
-                            <a href="{{ competition.test_solution_csv.url }}" class="">
-                                <i class="fas fa-cloud-download-alt"></i>
-                            </a>
-                        </li> --> 
-
                         <li class="list-group-item d-flex justify-content-between align-items-center">
                             <a href="{{ competition.train_csv.url }}">
                                 <span>
@@ -63,22 +49,13 @@
                             </a>
                         </li>
 
-                        <!-- <li class="list-group-item d-flex justify-content-between align-items-center">
-                            <a href="{{ competition.train_solution_csv.url }}">
-                                <span>
-                                    <i class="fas fa-file-csv mr-2"></i>{{ competition.train_solution_csv.name }}
-                                </span>
-                            </a>
-                            <a href="{{ competition.train_solution_csv.url }}" class="">
-                                <i class="fas fa-cloud-download-alt"></i>
-                            </a>
-                        </li> -->
                       </ul>
                 </div>
             </div data-spy="scroll" data-target="#scroll-example">
         </div>
         <div class="col-3 p-0">
             <div id="scroll-example" class="border-left pl-4">
+                <a href="{% url 'core:leaderboard' competition_id=competition.id %}#leaderboard" class="btn btn-block btn-primary">Leader Board</a>
                 {% if user_enroll %}
                     {% if user_submit %}
                         <a href="{% url 'core:submit_prediction' competition_id=competition.id %}" class="btn btn-block btn-success">Submit New Prediction</a>
@@ -91,7 +68,6 @@
                 {% endif %}
                 <a href="#description" class="btn btn-block btn-outline-primary">Description</a>
                 <a href="#dataset" class="btn btn-block btn-outline-primary">Dataset</a>
-                <a href="{% url 'core:leaderboard' competition_id=competition.id %}#leaderboard" class="btn btn-block btn-primary">Leader Board</a>
                 <hr>
                 {% if competition.tags %}
                     <div>
@@ -110,4 +86,14 @@
         </div>
     </div>
 </div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/showdown/1.9.1/showdown.js"></script>
+<script>
+    window.onload = function(){
+        markdown = document.querySelector('.markdown pre')
+        text = markdown.innerText
+        var converter = new showdown.Converter()
+        html = converter.makeHtml(text);
+        document.querySelector('.markdown').innerHTML = html
+    }
+</script>
 {% endblock %}
