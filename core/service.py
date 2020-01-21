@@ -10,8 +10,10 @@ from .extract_csv_file_data import parse_data, get_dict_from_str_list
 
 
 def load_competitions(request, user):
-
-    entered_competitions = user.submission_set.all()
+    
+    entered_competitions = []
+    if user.is_authenticated:
+        entered_competitions = user.submission_set.all()
     active_competitions = Competition.objects.exclude(
         submission__in=entered_competitions
     )

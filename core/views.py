@@ -9,14 +9,17 @@ from .service import (
     tell_about_turing_halt,
     submit_solution,
 )
+from .handle_jupyter_server import enroll_user
 
 
 def index(request):
     user = request.user
-    if user.is_authenticated:
-        rendered = load_competitions(request, user)
-    else:
-        rendered = tell_about_turing_halt(request)
+    rendered = load_competitions(request, user)
+
+    # if user.is_authenticated:
+    # rendered = load_competitions(request, user)
+    # else:
+    # rendered = tell_about_turing_halt(request)
     return rendered
 
 
@@ -82,8 +85,21 @@ def leaderboard(request, competition_id):
 def join_competition(request, competition_id):
     competition = get_object_or_404(Competition, id=competition_id)
     user = request.user
+    status = enroll_user(user, competition)
+    message = None
+    if status["task_status"] in ("STARTING", "PENDING"):
+        pass
+    else:
+        message = "You have already joined the competition."
     return render(
-        request, "core/leaderboard.html", {"competition": competition, "user": user}
+        request,
+        "core/start_competition.html",
+        {
+            "competition": competition,
+            "user": user,
+            "message": message,
+            "jupyter_path": status["jupyter_path"],
+        },
     )
 
 

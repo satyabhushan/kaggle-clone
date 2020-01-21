@@ -8,28 +8,30 @@
                 <span aria-hidden="true">&times;</span>
             </button>
         </div> -->
-        <div>
+        {% if user.is_authenticated %}
             <div>
-                <h4 class="font-weight-bold mb-3 mt-3">Entered Competitions</h4>
-                <!-- <hr> -->
-            </div>
-            <div class="row">
-                {% for competition in entered_competitions %}
-                    <div class="card col-4 border-0 mb-3 bg-transparent">
-                        <div class="card-body shadow bg-white" style="border-radius:5px">
-                            <div class="mb-2">
-                                {% for tag in competition.competition.tags %}
-                                    <span class="badge badge-primary">{{ tag.name }}</span>
-                                {% endfor %}
+                <div>
+                    <h4 class="font-weight-bold mb-3 mt-3">Entered Competitions</h4>
+                    <!-- <hr> -->
+                </div>
+                <div class="row">
+                    {% for competition in entered_competitions %}
+                        <div class="card col-4 border-0 mb-3 bg-transparent">
+                            <div class="card-body shadow bg-white" style="border-radius:5px">
+                                <div class="mb-2">
+                                    {% for tag in competition.competition.tags %}
+                                        <span class="badge badge-primary">{{ tag.name }}</span>
+                                    {% endfor %}
+                                </div>
+                                <h5 class="font-weight-bold card-title">{{ competition.competition.title }}</h5>
+                                <p class="card-text">{{ competition.competition.brief }}</p>
+                                <a href="{% url 'core:competition' competition_id=competition.competition.id %}" class="btn btn-primary">Start</a>
                             </div>
-                            <h5 class="font-weight-bold card-title">{{ competition.competition.title }}</h5>
-                            <p class="card-text">{{ competition.competition.brief }}</p>
-                            <a href="{% url 'core:competition' competition_id=competition.competition.id %}" class="btn btn-primary">Start</a>
                         </div>
-                    </div>
-                {% endfor %}
+                    {% endfor %}
+                </div>
             </div>
-        </div>
+        {% endif %}
 
         <div>
             <div>
